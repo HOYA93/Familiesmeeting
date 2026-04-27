@@ -126,17 +126,18 @@ body {
   <div class="section">
     <h3>메뉴판</h3>
 
-    <img id="menuMain" src="menu1.jpg" class="main-img menu-main-img"
-     onpointerdown="swipeStart(event)"
-     onpointerup="swipeEnd(event, 'menu', this)">
+   <img id="menuMain" src="menu1.jpg" class="main-img menu-main-img"
+     ontouchstart="startSwipe(event)"
+     ontouchend="endSwipe(event, 'menu')"
+     onclick="openModal(this.src)">
 
     <div class="thumb-list">
-      <img src="menu1.jpg" class="thumb active" onclick="changeMenu(this)">
-      <img src="menu2.jpg" class="thumb" onclick="changeMenu(this)">
-      <img src="menu3.jpg" class="thumb" onclick="changeMenu(this)">
-      <img src="menu4.jpg" class="thumb" onclick="changeMenu(this)">
-      <img src="menu5.jpg" class="thumb" onclick="changeMenu(this)">
-      <img src="menu6.jpg" class="thumb" onclick="changeMenu(this)">
+     <img src="menu1.jpg" class="thumb active" onclick="setMenu(0)">
+<img src="menu2.jpg" class="thumb" onclick="setMenu(1)">
+<img src="menu3.jpg" class="thumb" onclick="setMenu(2)">
+<img src="menu4.jpg" class="thumb" onclick="setMenu(3)">
+<img src="menu5.jpg" class="thumb" onclick="setMenu(4)">
+<img src="menu6.jpg" class="thumb" onclick="setMenu(5)">
     </div>
   </div>
 
@@ -144,19 +145,20 @@ body {
   <div class="section">
     <h3>음식 사진</h3>
 
-   <img id="foodMain" src="food1.jpg" class="main-img food-main-img"
-     onpointerdown="swipeStart(event)"
-     onpointerup="swipeEnd(event, 'food', this)">
+  <img id="foodMain" src="food1.jpg" class="main-img food-main-img"
+     ontouchstart="startSwipe(event)"
+     ontouchend="endSwipe(event, 'food')"
+     onclick="openModal(this.src)">
     
     <div class="thumb-list">
-      <img src="food1.jpg" class="thumb active" onclick="changeFood(this)">
-      <img src="food2.jpg" class="thumb" onclick="changeFood(this)">
-      <img src="food3.jpg" class="thumb" onclick="changeFood(this)">
-      <img src="food4.jpg" class="thumb" onclick="changeFood(this)">
-      <img src="food5.jpg" class="thumb" onclick="changeFood(this)">
-      <img src="food6.jpg" class="thumb" onclick="changeFood(this)">
-      <img src="food7.jpg" class="thumb" onclick="changeFood(this)">
-      <img src="food8.jpg" class="thumb" onclick="changeFood(this)">
+     <img src="food1.jpg" class="thumb active" onclick="setFood(0)">
+<img src="food2.jpg" class="thumb" onclick="setFood(1)">
+<img src="food3.jpg" class="thumb" onclick="setFood(2)">
+<img src="food4.jpg" class="thumb" onclick="setFood(3)">
+<img src="food5.jpg" class="thumb" onclick="setFood(4)">
+<img src="food6.jpg" class="thumb" onclick="setFood(5)">
+<img src="food7.jpg" class="thumb" onclick="setFood(6)">
+<img src="food8.jpg" class="thumb" onclick="setFood(7)">
     </div>
   </div>
 
@@ -171,59 +173,49 @@ body {
 <script>
 let menuIndex = 0;
 let foodIndex = 0;
+let startX = 0;
+let moved = false;
 
 const menuImages = ["menu1.jpg", "menu2.jpg", "menu3.jpg", "menu4.jpg", "menu5.jpg", "menu6.jpg"];
 const foodImages = ["food1.jpg", "food2.jpg", "food3.jpg", "food4.jpg", "food5.jpg", "food6.jpg", "food7.jpg", "food8.jpg"];
 
-function updateGallery(type) {
-  const images = type === "menu" ? menuImages : foodImages;
-  const index = type === "menu" ? menuIndex : foodIndex;
-  const mainId = type === "menu" ? "menuMain" : "foodMain";
-  const sectionNo = type === "menu" ? 1 : 2;
+function setMenu(index) {
+  menuIndex = index;
+  document.getElementById("menuMain").src = menuImages[menuIndex];
 
-  document.getElementById(mainId).src = images[index];
-
-  const thumbs = document.querySelectorAll(`.section:nth-of-type(${sectionNo}) .thumb`);
-  thumbs.forEach(t => t.classList.remove("active"));
-  thumbs[index].classList.add("active");
+  document.querySelectorAll(".section:nth-child(1) .thumb").forEach((thumb, i) => {
+    thumb.classList.toggle("active", i === menuIndex);
+  });
 }
 
-function changeMenu(el) {
-  menuIndex = menuImages.indexOf(el.getAttribute("src"));
-  updateGallery("menu");
+function setFood(index) {
+  foodIndex = index;
+  document.getElementById("foodMain").src = foodImages[foodIndex];
+
+  document.querySelectorAll(".section:nth-child(2) .thumb").forEach((thumb, i) => {
+    thumb.classList.toggle("active", i === foodIndex);
+  });
 }
 
-function changeFood(el) {
-  foodIndex = foodImages.indexOf(el.getAttribute("src"));
-  updateGallery("food");
-}
-  
-let startX = 0;
-let isSwiped = false;
-
-function swipeStart(e) {
-  startX = e.clientX;
-  isSwiped = false;
+function startSwipe(event) {
+  startX = event.touches[0].clientX;
+  moved = false;
 }
 
-function swipeEnd(e, type, imgEl) {
-  const endX = e.clientX;
+function endSwipe(event, type) {
+  const endX = event.changedTouches[0].clientX;
   const diff = startX - endX;
 
-  // 좌우 이동이 거의 없으면 클릭으로 판단 → 확대
-  if (Math.abs(diff) < 30) {
-    openModal(imgEl.src);
-    return;
-  }
+  if (Math.abs(diff) < 50) return;
 
-  isSwiped = true;
+  moved = true;
 
   if (type === "menu") {
     menuIndex = diff > 0
       ? (menuIndex + 1) % menuImages.length
       : (menuIndex - 1 + menuImages.length) % menuImages.length;
 
-    updateGallery("menu");
+    setMenu(menuIndex);
   }
 
   if (type === "food") {
@@ -231,11 +223,16 @@ function swipeEnd(e, type, imgEl) {
       ? (foodIndex + 1) % foodImages.length
       : (foodIndex - 1 + foodImages.length) % foodImages.length;
 
-    updateGallery("food");
+    setFood(foodIndex);
   }
 }
 
 function openModal(src) {
+  if (moved) {
+    moved = false;
+    return;
+  }
+
   document.getElementById("modalImage").src = src;
   document.getElementById("imageModal").classList.add("show");
 }
