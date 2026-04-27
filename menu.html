@@ -110,6 +110,11 @@ body {
   font-size: 34px;
   cursor: pointer;
 }
+
+.main-img {
+  cursor: zoom-in;
+  touch-action: pan-y;
+}
   
 </style>
 </head>
@@ -122,11 +127,8 @@ body {
     <h3>메뉴판</h3>
 
     <img id="menuMain" src="menu1.jpg" class="main-img menu-main-img"
-     onclick="openModal(this.src)"
-     ontouchstart="swipeStart(event)"
-     ontouchend="swipeEnd(event, 'menu')"
-     onmousedown="swipeStart(event)"
-     onmouseup="swipeEnd(event, 'menu')">
+     onpointerdown="swipeStart(event)"
+     onpointerup="swipeEnd(event, 'menu', this)">
 
     <div class="thumb-list">
       <img src="menu1.jpg" class="thumb active" onclick="changeMenu(this)">
@@ -142,13 +144,10 @@ body {
   <div class="section">
     <h3>음식 사진</h3>
 
-    <img id="foodMain" src="food1.jpg" class="main-img food-main-img"
-     onclick="openModal(this.src)"
-     ontouchstart="swipeStart(event)"
-     ontouchend="swipeEnd(event, 'food')"
-     onmousedown="swipeStart(event)"
-     onmouseup="swipeEnd(event, 'food')">
-
+   <img id="foodMain" src="food1.jpg" class="main-img food-main-img"
+     onpointerdown="swipeStart(event)"
+     onpointerup="swipeEnd(event, 'food', this)">
+    
     <div class="thumb-list">
       <img src="food1.jpg" class="thumb active" onclick="changeFood(this)">
       <img src="food2.jpg" class="thumb" onclick="changeFood(this)">
@@ -177,39 +176,24 @@ const menuImages = ["menu1.jpg", "menu2.jpg", "menu3.jpg", "menu4.jpg", "menu5.j
 const foodImages = ["food1.jpg", "food2.jpg", "food3.jpg", "food4.jpg", "food5.jpg", "food6.jpg", "food7.jpg", "food8.jpg"];
 
 let startX = 0;
-
-function updateGallery(type) {
-  const images = type === "menu" ? menuImages : foodImages;
-  const index = type === "menu" ? menuIndex : foodIndex;
-  const mainId = type === "menu" ? "menuMain" : "foodMain";
-  const sectionNo = type === "menu" ? 1 : 2;
-
-  document.getElementById(mainId).src = images[index];
-
-  const thumbs = document.querySelectorAll(`.section:nth-of-type(${sectionNo}) .thumb`);
-  thumbs.forEach(t => t.classList.remove("active"));
-  thumbs[index].classList.add("active");
-}
-
-function changeMenu(el) {
-  menuIndex = menuImages.indexOf(el.getAttribute("src"));
-  updateGallery("menu");
-}
-
-function changeFood(el) {
-  foodIndex = foodImages.indexOf(el.getAttribute("src"));
-  updateGallery("food");
-}
+let isSwiped = false;
 
 function swipeStart(e) {
-  startX = e.touches ? e.touches[0].clientX : e.clientX;
+  startX = e.clientX;
+  isSwiped = false;
 }
 
-function swipeEnd(e, type) {
-  const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+function swipeEnd(e, type, imgEl) {
+  const endX = e.clientX;
   const diff = startX - endX;
 
-  if (Math.abs(diff) < 50) return;
+  // 좌우 이동이 거의 없으면 클릭으로 판단 → 확대
+  if (Math.abs(diff) < 30) {
+    openModal(imgEl.src);
+    return;
+  }
+
+  isSwiped = true;
 
   if (type === "menu") {
     menuIndex = diff > 0
