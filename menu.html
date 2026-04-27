@@ -175,6 +175,29 @@ let foodIndex = 0;
 const menuImages = ["menu1.jpg", "menu2.jpg", "menu3.jpg", "menu4.jpg", "menu5.jpg", "menu6.jpg"];
 const foodImages = ["food1.jpg", "food2.jpg", "food3.jpg", "food4.jpg", "food5.jpg", "food6.jpg", "food7.jpg", "food8.jpg"];
 
+function updateGallery(type) {
+  const images = type === "menu" ? menuImages : foodImages;
+  const index = type === "menu" ? menuIndex : foodIndex;
+  const mainId = type === "menu" ? "menuMain" : "foodMain";
+  const sectionNo = type === "menu" ? 1 : 2;
+
+  document.getElementById(mainId).src = images[index];
+
+  const thumbs = document.querySelectorAll(`.section:nth-of-type(${sectionNo}) .thumb`);
+  thumbs.forEach(t => t.classList.remove("active"));
+  thumbs[index].classList.add("active");
+}
+
+function changeMenu(el) {
+  menuIndex = menuImages.indexOf(el.getAttribute("src"));
+  updateGallery("menu");
+}
+
+function changeFood(el) {
+  foodIndex = foodImages.indexOf(el.getAttribute("src"));
+  updateGallery("food");
+}
+  
 let startX = 0;
 let isSwiped = false;
 
