@@ -121,7 +121,12 @@ body {
   <div class="section">
     <h3>메뉴판</h3>
 
-    <img id="menuMain" src="menu1.jpg" class="main-img menu-main-img" onclick="openModal(this.src)">
+    <img id="menuMain" src="menu1.jpg" class="main-img menu-main-img"
+     onclick="openModal(this.src)"
+     ontouchstart="swipeStart(event)"
+     ontouchend="swipeEnd(event, 'menu')"
+     onmousedown="swipeStart(event)"
+     onmouseup="swipeEnd(event, 'menu')">
 
     <div class="thumb-list">
       <img src="menu1.jpg" class="thumb active" onclick="changeMenu(this)">
@@ -137,7 +142,12 @@ body {
   <div class="section">
     <h3>음식 사진</h3>
 
-    <img id="foodMain" src="food1.jpg" class="main-img food-main-img" onclick="openModal(this.src)">
+    <img id="foodMain" src="food1.jpg" class="main-img food-main-img"
+     onclick="openModal(this.src)"
+     ontouchstart="swipeStart(event)"
+     ontouchend="swipeEnd(event, 'food')"
+     onmousedown="swipeStart(event)"
+     onmouseup="swipeEnd(event, 'food')">
 
     <div class="thumb-list">
       <img src="food1.jpg" class="thumb active" onclick="changeFood(this)">
@@ -156,33 +166,65 @@ body {
 </div>
 
 <script>
-// 메뉴판
-function changeMenu(el) {
-  document.getElementById("menuMain").src = el.src;
-
-  document.querySelectorAll(".section:nth-of-type(1) .thumb")
-    .forEach(t => t.classList.remove("active"));
-
-  el.classList.add("active");
-}
-
-// 음식사진
-function changeFood(el) {
-  document.getElementById("foodMain").src = el.src;
-
-  document.querySelectorAll(".section:nth-of-type(2) .thumb")
-    .forEach(t => t.classList.remove("active"));
-
-  el.classList.add("active");
-}
-</script>
-
-<div id="imageModal" class="image-modal" onclick="closeModal()">
-  <span class="close-modal">&times;</span>
-  <img id="modalImage" src="">
-</div>
-
 <script>
+let menuIndex = 0;
+let foodIndex = 0;
+
+const menuImages = ["menu1.jpg", "menu2.jpg", "menu3.jpg", "menu4.jpg", "menu5.jpg", "menu6.jpg"];
+const foodImages = ["food1.jpg", "food2.jpg", "food3.jpg", "food4.jpg", "food5.jpg", "food6.jpg", "food7.jpg", "food8.jpg"];
+
+let startX = 0;
+
+function updateGallery(type) {
+  const images = type === "menu" ? menuImages : foodImages;
+  const index = type === "menu" ? menuIndex : foodIndex;
+  const mainId = type === "menu" ? "menuMain" : "foodMain";
+  const sectionNo = type === "menu" ? 1 : 2;
+
+  document.getElementById(mainId).src = images[index];
+
+  const thumbs = document.querySelectorAll(`.section:nth-of-type(${sectionNo}) .thumb`);
+  thumbs.forEach(t => t.classList.remove("active"));
+  thumbs[index].classList.add("active");
+}
+
+function changeMenu(el) {
+  menuIndex = menuImages.indexOf(el.getAttribute("src"));
+  updateGallery("menu");
+}
+
+function changeFood(el) {
+  foodIndex = foodImages.indexOf(el.getAttribute("src"));
+  updateGallery("food");
+}
+
+function swipeStart(e) {
+  startX = e.touches ? e.touches[0].clientX : e.clientX;
+}
+
+function swipeEnd(e, type) {
+  const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+  const diff = startX - endX;
+
+  if (Math.abs(diff) < 50) return;
+
+  if (type === "menu") {
+    menuIndex = diff > 0
+      ? (menuIndex + 1) % menuImages.length
+      : (menuIndex - 1 + menuImages.length) % menuImages.length;
+
+    updateGallery("menu");
+  }
+
+  if (type === "food") {
+    foodIndex = diff > 0
+      ? (foodIndex + 1) % foodImages.length
+      : (foodIndex - 1 + foodImages.length) % foodImages.length;
+
+    updateGallery("food");
+  }
+}
+
 function openModal(src) {
   document.getElementById("modalImage").src = src;
   document.getElementById("imageModal").classList.add("show");
