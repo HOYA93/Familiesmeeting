@@ -83,7 +83,29 @@
   font-size: 18px;
 }
     
-    
+.icon-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #333;
+  color: #fff;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.icon-btn:nth-child(2) {
+  background: #8b6f5a;
+}    
   </style>
 </head>
 <body>
@@ -115,15 +137,18 @@
   <h2>연락처</h2>
 
   <div class="contact-box">
-    <h3>신랑</h3>
-    <a class="btn" href="tel:01034550570">전화하기</a>
-    <a class="btn sub-btn" href="sms:01034550570">문자 보내기</a>
+  <h3>신랑</h3>
+  <div class="icon-row">
+    <a class="icon-btn" href="tel:01012345678">📞</a>
+    <a class="icon-btn" href="sms:01012345678">💬</a>
   </div>
+</div>
 
-  <div class="contact-box">
-    <h3>신부</h3>
-    <a class="btn" href="tel:01094511985">전화하기</a>
-    <a class="btn sub-btn" href="sms:01094511985">문자 보내기</a>
+<div class="contact-box">
+  <h3>신부</h3>
+  <div class="icon-row">
+    <a class="icon-btn" href="tel:01087654321">📞</a>
+    <a class="icon-btn" href="sms:01087654321">💬</a>
   </div>
 </div>
     
