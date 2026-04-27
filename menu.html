@@ -1,68 +1,132 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>메뉴 안내</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>메뉴 안내</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: "Noto Sans KR", sans-serif;
-      background: #f7f3ee;
-      text-align: center;
-      color: #333;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: "Noto Sans KR", sans-serif;
+  background: #f7f3ee;
+  text-align: center;
+}
 
-    .wrap {
-      max-width: 480px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 30px 20px;
-    }
+.wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+}
 
-    h1 {
-      margin-bottom: 20px;
-    }
+.section {
+  margin-bottom: 40px;
+}
 
-    .menu-img {
-      width: 100%;
-      border-radius: 12px;
-      margin: 20px 0;
-    }
+/* 큰 이미지 */
+.main-img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
 
-    .menu-desc {
-      font-size: 15px;
-      line-height: 1.7;
-    }
+/* 썸네일 */
+.thumb-list {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding-bottom: 10px;
+}
 
-    .back-btn {
-      margin-top: 30px;
-      display: inline-block;
-      padding: 12px 20px;
-      background: #333;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 20px;
-    }
-  </style>
+.thumb {
+  flex: 0 0 auto;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.thumb.active {
+  border: 2px solid #333;
+}
+
+.back-btn {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 10px 18px;
+  background: #333;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 20px;
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>메뉴 안내</h1>
+<div class="wrap">
 
-    <!-- 메뉴 이미지 -->
-    <img src="menu.png" class="menu-img">
+  <!-- 🔥 1구역 (메뉴판) -->
+  <div class="section">
+    <h3>메뉴판</h3>
 
-    <!-- 설명 -->
-    <div class="menu-desc">
-      신라호텔 라연의 한식 코스 요리입니다.<br><br>
-      제철 재료를 활용한 정갈한 한식으로<br>
-      상견례에 적합한 품격 있는 식사가 제공됩니다.
+    <img id="menuMain" src="menu1.jpg" class="main-img">
+
+    <div class="thumb-list">
+      <img src="menu1.jpg" class="thumb active" onclick="changeMenu(this)">
+      <img src="menu2.jpg" class="thumb" onclick="changeMenu(this)">
+      <img src="menu3.jpg" class="thumb" onclick="changeMenu(this)">
+      <img src="menu4.jpg" class="thumb" onclick="changeMenu(this)">
+      <img src="menu5.jpg" class="thumb" onclick="changeMenu(this)">
+      <img src="menu6.jpg" class="thumb" onclick="changeMenu(this)">
     </div>
-
-    <a href="index.html" class="back-btn">돌아가기</a>
   </div>
+
+  <!-- 🔥 2구역 (음식 사진) -->
+  <div class="section">
+    <h3>음식 사진</h3>
+
+    <img id="foodMain" src="food1.jpg" class="main-img">
+
+    <div class="thumb-list">
+      <img src="food1.jpg" class="thumb active" onclick="changeFood(this)">
+      <img src="food2.jpg" class="thumb" onclick="changeFood(this)">
+      <img src="food3.jpg" class="thumb" onclick="changeFood(this)">
+      <img src="food4.jpg" class="thumb" onclick="changeFood(this)">
+      <img src="food5.jpg" class="thumb" onclick="changeFood(this)">
+      <img src="food6.jpg" class="thumb" onclick="changeFood(this)">
+      <img src="food7.jpg" class="thumb" onclick="changeFood(this)">
+      <img src="food8.jpg" class="thumb" onclick="changeFood(this)">
+    </div>
+  </div>
+
+  <a href="index.html" class="back-btn">돌아가기</a>
+
+</div>
+
+<script>
+// 메뉴판
+function changeMenu(el) {
+  document.getElementById("menuMain").src = el.src;
+
+  document.querySelectorAll(".section:nth-of-type(1) .thumb")
+    .forEach(t => t.classList.remove("active"));
+
+  el.classList.add("active");
+}
+
+// 음식사진
+function changeFood(el) {
+  document.getElementById("foodMain").src = el.src;
+
+  document.querySelectorAll(".section:nth-of-type(2) .thumb")
+    .forEach(t => t.classList.remove("active"));
+
+  el.classList.add("active");
+}
+</script>
+
 </body>
 </html>
