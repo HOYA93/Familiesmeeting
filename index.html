@@ -311,7 +311,7 @@
     계산 중...
   </div>
 
-  <button id="enterBtn" class="enter-btn" onclick="goEventPage()">
+  <button id="enterBtn" class="enter-btn" disabled onclick="goEventPage()">
     당일 페이지 이동
   </button>
 
@@ -329,7 +329,7 @@
     
   </div>
 <script>
-  const eventTime = new Date("2026-06-07T13:00:00+09:00");
+  const eventTime = new Date("2020-06-07T13:00:00+09:00");
 
   function updateCountdown() {
     const now = new Date();
