@@ -143,7 +143,7 @@ img {
      onclick="openModal(this.src)">
 
     <div class="thumb-list">
-     <img src="menu1.jpg" class="thumb active" onclick="setMenu(0)">
+     <img src="menu1.png" class="thumb active" onclick="setMenu(0)">
     </div>
   </div>
 
@@ -241,7 +241,8 @@ function openModal(src) {
   }
 
   document.getElementById("modalImage").src = src;
-  document.getElementById("imageModal").classList.add("show");
+  document.getElementById("imageModal").classList.add("show")
+    ;
 }
 
 function closeModal() {
