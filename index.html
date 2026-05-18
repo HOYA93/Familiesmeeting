@@ -359,11 +359,28 @@
   }
 
   function goEventPage() {
-    window.location.href = "event.html";
+  const now = new Date();
+
+  if (now < eventTime) {
+    alert("아직 입장 가능한 시간이 아닙니다.");
+    return;
   }
+
+  window.location.href = "event.html";
+}
 
   updateCountdown();
   setInterval(updateCountdown, 1000);
+</script>
+
+<script>
+  const openTime = new Date("2026-06-07T14:00:00+09:00");
+  const now = new Date();
+
+  if (now < openTime) {
+    alert("아직 입장 가능한 시간이 아닙니다.");
+    location.href = "index.html";
+  }
 </script>
   
 </body>
